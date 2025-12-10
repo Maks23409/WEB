@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задоволення від кожного шматочка</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #fff8f0;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background-color: #8B4513;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        /* Filters */
+        .filters {
+            background-color: #f5deb3;
+            padding: 20px;
+        }
+
+        .filter-section {
+            margin-bottom: 15px;
+        }
+
+        .filter-section h3 {
+            margin-bottom: 10px;
+            color: #8B4513;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #8B4513;
+            background-color: white;
+            color: #8B4513;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .filter-btn:hover {
+            background-color: #8B4513;
+            color: white;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        input[type="radio"]:checked + label {
+            background-color: #8B4513;
+            color: white;
+        }
+
+        /* Main content */
+        main {
+            padding: 20px;
+        }
+
+        .gallery {
+            display: grid;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card.hidden {
+            display: none;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            color: #8B4513;
+            margin-bottom: 10px;
+        }
+
+        .card-type {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .card-divider {
+            border-top: 2px solid #f5deb3;
+            margin: 15px 0;
+        }
+
+        .card-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .card-calories {
+            color: #8B4513;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #8B4513;
+            color: white;
+            padding: 30px 20px;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 10px;
+        }
+
+        /* Mobile First: 375px - 730px */
+        @media (min-width: 375px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                text-align: center;
+            }
+        }
+
+        /* Tablet: 730px - 1200px */
+        @media (min-width: 730px) {
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            .filter-section {
+                flex: 1;
+            }
+
+            .footer-content {
+                flex-direction: row;
+                justify-content: space-around;
+                text-align: left;
+            }
+
+            .footer-section {
+                flex: 1;
+            }
+        }
+
+        /* Desktop: 1200px+ */
+        @media (min-width: 1200px) {
+            .gallery {
+                grid-template-columns: repeat(3, 1fr);
+                grid-auto-rows: 1fr;
+            }
+
+            .card {
+                height: 100%;
+            }
+
+            header h1 {
+                font-size: 2.5em;
+            }
+
+            .filters {
+                padding: 30px;
+            }
+
+            main {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 40px;
+            }
+
+            .footer-content {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🍰 Задоволення від кожного шматочка 🍰</h1>
+        <p>Ваша особиста книга кондитерських рецептів</p>
+    </header>
+
+    <div class="filters">
+        <div class="filter-section">
+            <h3>Фільтр за калоріями:</h3>
+            <div class="filter-buttons">
+                <button class="filter-btn" onclick="filterCalories('all')">Всі</button>
+                <button class="filter-btn" onclick="filterCalories('low')">Низькокалорійні (&lt;300)</button>
+                <button class="filter-btn" onclick="filterCalories('medium')">Середні (300-500)</button>
+                <button class="filter-btn" onclick="filterCalories('high')">Високі (&gt;500)</button>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h3>Тип виробу:</h3>
+            <div class="filter-buttons">
+                <input type="radio" name="type" id="all" value="all" checked>
+                <label for="all" class="filter-btn">Всі</label>
+
+                <input type="radio" name="type" id="cake" value="торт">
+                <label for="cake" class="filter-btn">Торти</label>
+
+                <input type="radio" name="type" id="cupcake" value="кекс">
+                <label for="cupcake" class="filter-btn">Кекси</label>
+
+                <input type="radio" name="type" id="cookie" value="печиво">
+                <label for="cookie" class="filter-btn">Печиво</label>
+
+                <input type="radio" name="type" id="pie" value="пиріг">
+                <label for="pie" class="filter-btn">Пироги</label>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div class="gallery" id="gallery">
+            <div class="card" data-type="торт" data-calories="450">
+                <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=250&fit=crop" alt="Шоколадний торт" class="card-image">
+                <div class="card-content">
+                    <h2 class="card-title">Шоколадний торт</h2>
+                    <p class="card-type">Торт</p>
+                    <div class="card-divider"></div>
+                    <p class="card-description">Ніжний шоколадний бісквіт з вершковим кремом та шоколадною глазур'ю. Ідеальний десерт для святкового столу!</p>
+                    <p class="card-calories">🔥 450 ккал</p>
+                </div>
+            </div>
+
+            <div class="card" data-type="кекс" data-calories="280">
+                <img src="https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=400&h=250&fit=crop" alt="Ванільні капкейки" class="card-image">
+                <div class="card-content">
+                    <h2 class="card-title">Ванільні капкейки</h2>
+                    <p class="card-type">Кекс</p>
+                    <div class="card-divider"></div>
+                    <p class="card-description">М'які ванільні капкейки з повітряним кремчізом. Прикрашені кольоровою посипкою та ягодами.</p>
+                    <p class="card-calories">🔥 280 ккал</p>
+                </div>
+            </div>
+
+            <div class="card" data-type="печиво" data-calories="120">
+                <img src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=400&h=250&fit=crop" alt="Вівсяне печиво" class="card-image">
+                <div class="card-content">
+                    <h2 class="card-title">Вівсяне печиво</h2>
+                    <p class="card-type">Печиво</p>
+                    <div class="card-divider"></div>
+                    <p class="card-description">Хрустке вівсяне печиво з родзинками та горіхами. Чудово підходить до ранкової кави або чаю.</p>
+                    <p class="card-calories">🔥 120 ккал</p>
+                </div>
+            </div>
+
+            <div class="card" data-type="пиріг" data-calories="350">
+                <img src="https://images.unsplash.com/photo-1535920527002-b35e96722eb9?w=400&h=250&fit=crop" alt="Яблучний пиріг" class="card-image">
+                <div class="card-content">
+                    <h2 class="card-title">Яблучний пиріг</h2>
+                    <p class="card-type">Пиріг</p>
+                    <div class="card-divider"></div>
+                    <p class="card-description">Класичний яблучний пиріг з корицею на піщаному тісті. Наповнення з соковитих яблук з легкою кислинкою.</p>
+                    <p class="card-calories">🔥 350 ккал</p>
+                </div>
+            </div>
+
+            <div class="card" data-type="торт" data-calories="520">
+                <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=250&fit=crop" alt="Наполеон" class="card-image">
+                <div class="card-content">
+                    <h2 class="card-title">Наполеон</h2>
+                    <p class="card-type">Торт</p>
+                    <div class="card-divider"></div>
+                    <p class="card-description">Легендарний торт з численних шарів листкового тіста та ніжного заварного крему. Традиційний рецепт бабусі.</p>
+                    <p class="card-calories">🔥 520 ккал</p>
+                </div>
+            </div>
+
+            <div class="card" data-type="кекс" data-calories="310">
+                <img src="мафіни2.jpg" alt="Шоколадні маффіни" class="card-image">
+                <div class="card-content">
+                    <h2 class="card-title">Шоколадні маффіни</h2>
+                    <p class="card-type">Кекс</p>
+                    <div class="card-divider"></div>
+                    <p class="card-description">Пишні шоколадні маффіни з шматочками шоколаду всередині. Швидкий рецепт для несподіваних гостей.</p>
+                    <p class="card-calories">🔥 310 ккал</p>
+                </div>
+            </div>
+
+            <div class="card" data-type="печиво" data-calories="95">
+                <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=250&fit=crop" alt="Пісочне печиво" class="card-image">
+                <div class="card-content">
+                    <h2 class="card-title">Пісочне печиво</h2>
+                    <p class="card-type">Печиво</p>
+                    <div class="card-divider"></div>
+                    <p class="card-description">Класичне пісочне печиво що тане в роті. Ідеальне для домашнього чаювання з родиною.</p>
+                    <p class="card-calories">🔥 95 ккал</p>
+                </div>
+            </div>
+
+            <div class="card" data-type="пиріг" data-calories="380">
+                <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=250&fit=crop" alt="Чізкейк" class="card-image">
+                <div class="card-content">
+                    <h2 class="card-title">Класичний чізкейк</h2>
+                    <p class="card-type">Пиріг</p>
+                    <div class="card-divider"></div>
+                    <p class="card-description">Ніжний чізкейк на основі печива з вершковим сиром. Можна додати ягідний топінг на ваш смак.</p>
+                    <p class="card-calories">🔥 380 ккал</p>
+                </div>
+            </div>
+
+            <div class="card" data-type="торт" data-calories="410">
+                <img src="https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=400&h=250&fit=crop" alt="Медовик" class="card-image">
+                <div class="card-content">
+                    <h2 class="card-title">Медовик</h2>
+                    <p class="card-type">Торт</p>
+                    <div class="card-divider"></div>
+                    <p class="card-description">Ароматний медовий торт з ніжним сметанним кремом між тонкими медовими коржами. Улюблений рецепт!</p>
+                    <p class="card-calories">🔥 410 ккал</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Про проект</h3>
+                <p>Ваша особиста колекція перевірених кондитерських рецептів</p>
+            </div>
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>Email: recipes@sweetbook.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Слідкуйте за нами</h3>
+                <p>Instagram | Facebook | Pinterest</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const radios = document.querySelectorAll('input[name="type"]');
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                filterByType(this.value);
+            });
+        });
+
+        function filterByType(type) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const cardType = card.dataset.type;
+                if (type === 'all' || cardType === type) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        function filterCalories(range) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const calories = parseInt(card.dataset.calories);
+                let show = false;
+                
+                if (range === 'all') {
+                    show = true;
+                } else if (range === 'low' && calories < 300) {
+                    show = true;
+                } else if (range === 'medium' && calories >= 300 && calories <= 500) {
+                    show = true;
+                } else if (range === 'high' && calories > 500) {
+                    show = true;
+                }
+                
+                if (show) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
